@@ -35,6 +35,7 @@ Methods supported
 - `DateTime` object.
 - `date_create`
 - `date`
+- `gettimeofday`
 - `gmdate`
 - `microtime`
 - `strtotime`
