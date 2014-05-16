@@ -19,9 +19,7 @@
         "ext-aop" : "To enable the time traveler and use this library."
     },
     "autoload":     {
-        "psr-0": {
-            "Rezzza\\TimeTraveler": "src/"
-        }
+        "psr-4": { "Rezzza\\": "src/" }
     },
     "config": {
         "bin-dir": "bin"

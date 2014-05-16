@@ -1,6 +1,6 @@
 <?php
 
-namespace Rezzza\TimeTraveler;
+namespace Rezzza;
 
 /**
  * TimeTraveler
@@ -40,6 +40,19 @@ class TimeTraveler
 
         aop_add_after('time()', function(\AopJoinPoint $joinPoint) {
             $joinPoint->setReturnedValue($joinPoint->getReturnedValue() + TimeTraveler::getCurrentTimeOffset());
+        });
+
+        aop_add_after('microtime()', function(\AopJoinPoint $joinPoint) {
+            $returnedValue = $joinPoint->getReturnedValue();
+
+            if (is_float($returnedValue)) {
+                $joinPoint->setReturnedValue($joinPoint->getReturnedValue() + TimeTraveler::getCurrentTimeOffset());
+            } else {
+                list($micro, $seconds) = explode(' ', $joinPoint->getReturnedValue());
+                $seconds += TimeTraveler::getCurrentTimeOffset();
+
+                $joinPoint->setReturnedValue($micro.' '.$seconds);
+            }
         });
 
         aop_add_after('DateTime->__construct()', function(\AopJoinPoint $joinPoint) {

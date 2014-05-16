@@ -1,9 +1,9 @@
 <?php
 
-namespace tests\units\Rezzza\TimeTraveler;
+namespace tests\units\Rezzza;
 
 use mageekguy\atoum;
-use Rezzza\TimeTraveler\TimeTraveler as TestedClass;
+use Rezzza\TimeTraveler as TestedClass;
 
 class TimeTraveler extends atoum\test
 {
@@ -73,4 +73,27 @@ class TimeTraveler extends atoum\test
             ->isIdenticalTo($result);
     }
 
+    public function microtimeDataProvider()
+    {
+        return array(
+            // currentDate, result
+            array('2013-05-25 00:00:00', 1369440000),
+            array('2013-05-26 00:00:00', 1369526400),
+        );
+    }
+
+    /**
+     * @dataProvider microtimeDataProvider
+     */
+    public function testMicrotime($currentDate, $result)
+    {
+        $this->if(TestedClass::enable())
+            ->and(TestedClass::setCurrentDate($currentDate))
+
+            ->integer(intval(microtime(true)))
+            ->isEqualTo($result)
+
+            ->string(microtime(false))
+            ->endWith((string) $result);
+    }
 }
