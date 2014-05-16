@@ -81,16 +81,21 @@ class TimeTraveler extends atoum\test
     {
         return array(
             // currentDate, result
-            array('2013-05-25 00:00:00', 1369440000),
-            array('2013-05-26 00:00:00', 1369526400),
+            array('2013-05-25 00:00:00', 1369440000, 'UTC'),
+            array('2013-05-26 00:00:00', 1369526400, 'UTC'),
+
+            array('2013-05-25 00:00:00', 1369432800, 'europe/paris'),
+            array('2013-05-26 00:00:00', 1369519200, 'europe/paris'),
         );
     }
 
     /**
      * @dataProvider timeDataProvider
      */
-    public function testTime($currentDate, $result)
+    public function testTime($currentDate, $result, $tz)
     {
+        ini_set('date.timezone', $tz);
+
         $this->if(TestedClass::enable())
             ->and(TestedClass::moveTo($currentDate))
             ->integer(time())
@@ -100,17 +105,22 @@ class TimeTraveler extends atoum\test
     public function microtimeDataProvider()
     {
         return array(
-            // currentDate, result
-            array('2013-05-25 00:00:00', 1369440000),
-            array('2013-05-26 00:00:00', 1369526400),
+            // currentDate, result, timezone
+            array('2013-05-25 00:00:00', 1369440000, 'UTC'),
+            array('2013-05-26 00:00:00', 1369526400, 'UTC'),
+
+            array('2013-05-25 00:00:00', 1369432800, 'europe/paris'),
+            array('2013-05-26 00:00:00', 1369519200, 'europe/paris'),
         );
     }
 
     /**
      * @dataProvider microtimeDataProvider
      */
-    public function testMicrotime($currentDate, $result)
+    public function testMicrotime($currentDate, $result, $tz)
     {
+        ini_set('date.timezone', $tz);
+
         $this->if(TestedClass::enable())
             ->and(TestedClass::moveTo($currentDate))
 
@@ -125,21 +135,27 @@ class TimeTraveler extends atoum\test
     {
         return array(
             // currentDate, str, 2nd argument of strtotime, time
-            array('2013-05-25 00:00:00', '+2 hours', null, 1369447200),
-            array('2013-05-26 00:00:00', '+1 hour', null, 1369530000),
-            array('2013-05-26 00:00:00', '10:00:00', null, 1369562400),
+            array('2013-05-25 00:00:00', '+2 hours', null, 1369447200, 'UTC'),
+            array('2013-05-26 00:00:00', '+1 hour', null, 1369530000, 'UTC'),
+            array('2013-05-26 00:00:00', '10:00:00', null, 1369562400, 'UTC'),
+            array('2013-05-26 00:00:00', '2014-01-01 10:00:00', null, 1388570400, 'UTC'),
+            array('2013-05-26 00:00:00', '+1 second', 1369447200, 1369447201, 'UTC'),
 
-            array('2013-05-26 00:00:00', '2014-01-01 10:00:00', null, 1388570400),
-
-            array('2013-05-26 00:00:00', '+1 second', 1369447200, 1369447201),
+            array('2013-05-25 00:00:00', '+2 hours', null, 1369440000, 'europe/paris'),
+            array('2013-05-26 00:00:00', '+1 hour', null, 1369522800, 'europe/paris'),
+            array('2013-05-26 00:00:00', '10:00:00', null, 1369555200, 'europe/paris'),
+            array('2013-05-26 00:00:00', '2014-01-01 10:00:00', null, 1388566800, 'europe/paris'),
+            array('2013-05-26 00:00:00', '+1 second', 1369447200, 1369447201, 'europe/paris'),
         );
     }
 
     /**
      * @dataProvider strtotimeDataProvider
      */
-    public function testStrtotime($currentDate, $str, $strTime, $result)
+    public function testStrtotime($currentDate, $str, $strTime, $result, $tz)
     {
+        ini_set('date.timezone', $tz);
+
         $this->if(TestedClass::enable())
             ->and(TestedClass::moveTo($currentDate))
 
