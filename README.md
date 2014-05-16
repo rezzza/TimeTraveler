@@ -33,8 +33,10 @@ Methods supported
 -----------------
 
 - `DateTime` object.
+
 - `time`
 - `microtime`
+- `strtotime`
 
 Usage
 -----

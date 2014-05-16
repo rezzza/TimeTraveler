@@ -107,4 +107,30 @@ class TimeTraveler extends atoum\test
             ->string(microtime(false))
             ->endWith((string) $result);
     }
+
+    public function strtotimeDataProvider()
+    {
+        return array(
+            // currentDate, str, 2nd argument of strtotime, time
+            array('2013-05-25 00:00:00', '+2 hours', null, 1369447200),
+            array('2013-05-26 00:00:00', '+1 hour', null, 1369530000),
+            array('2013-05-26 00:00:00', '10:00:00', null, 1369562400),
+
+            array('2013-05-26 00:00:00', '2014-01-01 10:00:00', null, 1388570400),
+
+            array('2013-05-26 00:00:00', '+1 second', 1369447200, 1369447201),
+        );
+    }
+
+    /**
+     * @dataProvider strtotimeDataProvider
+     */
+    public function testStrtotime($currentDate, $str, $strTime, $result)
+    {
+        $this->if(TestedClass::enable())
+            ->and(TestedClass::setCurrentDate($currentDate))
+
+            ->integer(strtotime($str, $strTime))
+            ->isEqualTo($result);
+    }
 }
