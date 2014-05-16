@@ -50,6 +50,8 @@ var_dump(new \DateTime('+2 hours')); // 2011-06-10 13:00:00
 var_dump(time());
 var_dump(microtime());
 var_dump(microtime(true));
+
+Rezzza\TimeTraveler::removeCurrentDate();
 ```
 
 

@@ -7,7 +7,7 @@ use Rezzza\TimeTraveler as TestedClass;
 
 class TimeTraveler extends atoum\test
 {
-    public function testSetCurrentDateOffset()
+    public function testSetCurrentDate()
     {
         $this->if(TestedClass::setCurrentDate('now'))
             ->integer(TestedClass::getCurrentTimeOffset())
@@ -22,6 +22,19 @@ class TimeTraveler extends atoum\test
             ->isEqualTo(-1)
             ;
     }
+
+    public function testRemoveCurrentDate()
+    {
+        $this->if(TestedClass::setCurrentDate('+1 second'))
+            ->integer(TestedClass::getCurrentTimeOffset())
+            ->isEqualTo(1)
+
+            ->and(TestedClass::removeCurrentDate())
+            ->variable(TestedClass::getCurrentTimeOffset())
+            ->isNull()
+            ;
+    }
+
 
     public function testDateTimeConstructNotEnabled()
     {
