@@ -3,7 +3,31 @@ TimeTraveler
 
 [![Build Status](https://secure.travis-ci.org/rezzza/TimeTraveler.png)](http://travis-ci.org/rezzza/TimeTraveler)
 
+`````
+          _
+         /-\
+    _____|#|_____
+   |_____________|
+  |_______________|
+|||_Time_Traveler_|||
+ | |¯|¯|¯|||¯|¯|¯| |
+ | |-|-|-|||-|-|-| |
+ | |_|_|_|||_|_|_| |
+ | ||~~~| | |¯¯¯|| |
+ | ||~~~|!|!| O || |
+ | ||~~~| |.|___|| |
+ | ||¯¯¯| | |¯¯¯|| |
+ | ||   | | |   || |
+ | ||___| | |___|| |
+ | ||¯¯¯| | |¯¯¯|| |
+ | ||   | | |   || |
+ | ||___| | |___|| |
+|¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯|
+ ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+`````
+
 Mock the time system in PHP using [AOP-PHP](https://github.com/AOP-PHP/AOP). You can now travel the time on your application easily !
+
 
 Methods supported
 -----------------
