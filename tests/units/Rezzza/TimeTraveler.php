@@ -189,61 +189,33 @@ class TimeTraveler extends atoum\test
             ->isEqualTo($result);
     }
 
-    public function gettmeofdayDReturnArrayDataProvider()
-    {
-        return array(
-            array('2013-05-25 00:00:00', 1369432800),
-            array('2025-05-26 00:00:00', 1748210400),
-        );
-    }
-
-    /**
-     * @dataProvider gettmeofdayDReturnArrayDataProvider
-     */
-    public function testGettimeofdayReturnArray($currentDate, $sec)
-    {
-        $this->if(TestedClass::enable())
-            ->and(TestedClass::moveTo($currentDate))
-            ->then($timeofday = gettimeofday())
-
-            ->array($timeofday)
-            ->hasKey('sec')
-            ->hasKey('usec')
-            ->hasKey('minuteswest')
-            ->hasKey('dsttime')
-
-            ->integer($timeofday['sec'])
-            ->isEqualTo($sec)
-
-            ->integer($timeofday['usec'])
-            ->integer($timeofday['minuteswest'])
-            ->integer($timeofday['dsttime'])
-        ;
-    }
-
-
     public function gettimeofdayDataProvider()
     {
         return array(
-            array('2013-05-25 00:00:00', 1369432800),
-            array('2025-05-26 00:00:00', 1748210400),
+            array('2013-05-25 00:00:00', 1369440000, 'UTC'),
+            array('2025-05-26 00:00:00', 1748217600, 'UTC'),
+
+            array('2013-05-25 00:00:00', 1369432800, 'europe/paris'),
+            array('2025-05-26 00:00:00', 1748210400, 'europe/paris'),
         );
     }
 
     /**
      * @dataProvider gettimeofdayDataProvider
      */
-    public function testGettimeofday($currentDate, $roundSec)
+    public function testGettimeofday($currentDate, $roundSec, $timezone)
     {
+        ini_set('date.timezone', $timezone);
+
         $this->if(TestedClass::enable())
             ->and(TestedClass::moveTo($currentDate))
 
             ->float(gettimeofday(true))
             ->isNearlyEqualTo((float) $roundSec, pow(10, -9))
 
-            ->array(gettimeofday(false))
-            ->hasKey('sec')
-            ->containsValues(array($roundSec))
+            ->then($data = gettimeofday(false))
+            ->array($data)
+            ->integer($data['sec'])->isEqualTo($roundSec);
         ;
     }
 }
