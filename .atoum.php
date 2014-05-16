@@ -6,3 +6,5 @@ $cliReport = $script->addDefaultReport();
 $cliReport->addField(new atoum\report\fields\runner\result\logo());
 
 $runner->addReport($cliReport);
+
+$runner->addTestsFromDirectory(__DIR__ . '/tests/units/');
