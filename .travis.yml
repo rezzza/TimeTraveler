@@ -3,6 +3,7 @@ language: php
 php:
     - 5.3
     - 5.4
+    - 5.5
 
 before_script:
     - pecl install aop-beta
@@ -15,3 +16,8 @@ script:
 notifications:
     email:
         - ci@verylastroom.com
+
+matrix:
+   allow_failures:
+       # wait for https://github.com/AOP-PHP/AOP/pull/82 ...
+       - php: 5.5
