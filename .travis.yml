@@ -7,7 +7,6 @@ php:
 
 before_script:
     - pecl install aop-beta
-    - echo "extension=aop.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
     - curl -s http://getcomposer.org/installer | php
     - COMPOSER_ROOT_VERSION=dev-master php composer.phar install --dev
 

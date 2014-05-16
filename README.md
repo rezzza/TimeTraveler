@@ -1,6 +1,8 @@
 TimeTraveler
 ===========
 
+[![Build Status](https://secure.travis-ci.org/rezzza/TimeTraveler.png)](http://travis-ci.org/rezzza/TimeTraveler)
+
 Mock the time system in PHP using [AOP-PHP](https://github.com/AOP-PHP/AOP). You can now travel the time on your application easily !
 
 Methods supported
