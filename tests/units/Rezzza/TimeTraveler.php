@@ -9,27 +9,27 @@ class TimeTraveler extends atoum\test
 {
     public function testSetCurrentDate()
     {
-        $this->if(TestedClass::setCurrentDate('now'))
+        $this->if(TestedClass::moveTo('now'))
             ->integer(TestedClass::getCurrentTimeOffset())
             ->isEqualTo(0)
 
-            ->and(TestedClass::setCurrentDate('+1 second'))
+            ->and(TestedClass::moveTo('+1 second'))
             ->integer(TestedClass::getCurrentTimeOffset())
             ->isEqualTo(1)
 
-            ->and(TestedClass::setCurrentDate('-2 seconds'))
+            ->and(TestedClass::moveTo('-2 seconds'))
             ->integer(TestedClass::getCurrentTimeOffset())
             ->isEqualTo(-1)
             ;
     }
 
-    public function testRemoveCurrentDate()
+    public function testcomeBack()
     {
-        $this->if(TestedClass::setCurrentDate('+1 second'))
+        $this->if(TestedClass::moveTo('+1 second'))
             ->integer(TestedClass::getCurrentTimeOffset())
             ->isEqualTo(1)
 
-            ->and(TestedClass::removeCurrentDate())
+            ->and(TestedClass::comeBack())
             ->variable(TestedClass::getCurrentTimeOffset())
             ->isNull()
             ;
@@ -38,7 +38,7 @@ class TimeTraveler extends atoum\test
 
     public function testDateTimeConstructNotEnabled()
     {
-        $this->if(TestedClass::setCurrentDate('2013-05-25 00:00:00'))
+        $this->if(TestedClass::moveTo('2013-05-25 00:00:00'))
             ->object(new \DateTime())
             ->isNotEqualTo(new \DateTime('2013-05-25 00:00:00'));
     }
@@ -61,7 +61,7 @@ class TimeTraveler extends atoum\test
     public function testDateTimeConstruct($currentDate, $date, $result)
     {
         $this->if(TestedClass::enable())
-            ->and(TestedClass::setCurrentDate($currentDate))
+            ->and(TestedClass::moveTo($currentDate))
             ->object(new \DateTime($date))
             ->isEqualTo(new \DateTime($result));
     }
@@ -72,7 +72,7 @@ class TimeTraveler extends atoum\test
     public function testDateCreate($currentDate, $date, $result)
     {
         $this->if(TestedClass::enable())
-            ->and(TestedClass::setCurrentDate($currentDate))
+            ->and(TestedClass::moveTo($currentDate))
             ->object(date_create($date))
             ->isEqualTo(date_create($result));
     }
@@ -92,7 +92,7 @@ class TimeTraveler extends atoum\test
     public function testTime($currentDate, $result)
     {
         $this->if(TestedClass::enable())
-            ->and(TestedClass::setCurrentDate($currentDate))
+            ->and(TestedClass::moveTo($currentDate))
             ->integer(time())
             ->isIdenticalTo($result);
     }
@@ -112,7 +112,7 @@ class TimeTraveler extends atoum\test
     public function testMicrotime($currentDate, $result)
     {
         $this->if(TestedClass::enable())
-            ->and(TestedClass::setCurrentDate($currentDate))
+            ->and(TestedClass::moveTo($currentDate))
 
             ->integer(intval(microtime(true)))
             ->isEqualTo($result)
@@ -141,7 +141,7 @@ class TimeTraveler extends atoum\test
     public function testStrtotime($currentDate, $str, $strTime, $result)
     {
         $this->if(TestedClass::enable())
-            ->and(TestedClass::setCurrentDate($currentDate))
+            ->and(TestedClass::moveTo($currentDate))
 
             ->integer(strtotime($str, $strTime))
             ->isEqualTo($result);

@@ -43,7 +43,7 @@ Usage
 
 ```php
 Rezzza\TimeTraveler::enable();
-Rezzza\TimeTraveler::setCurrentDate('2011-06-10 11:00:00');
+Rezzza\TimeTraveler::moveTo('2011-06-10 11:00:00');
 
 var_dump(new \DateTime());           // 2011-06-10 11:00:00
 var_dump(new \DateTime('+2 hours')); // 2011-06-10 13:00:00
@@ -51,7 +51,7 @@ var_dump(time());
 var_dump(microtime());
 var_dump(microtime(true));
 
-Rezzza\TimeTraveler::removeCurrentDate();
+Rezzza\TimeTraveler::comeBack();
 ```
 
 

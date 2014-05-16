@@ -109,10 +109,10 @@ class TimeTraveler
      *
      * @param string $date date
      */
-    public static function setCurrentDate($date)
+    public static function moveTo($date)
     {
         if (!is_scalar($date)) {
-            throw new \InvalidArgumentException('TimeTraveler::setCurrentDate expects a scalar.');
+            throw new \InvalidArgumentException('TimeTraveler::moveTo expects a scalar.');
         }
 
         $now = static::$currentTimeOffset ? time() - static::$currentTimeOffset : time();
@@ -129,7 +129,7 @@ class TimeTraveler
     /**
      * Remove current time and offset. Come back to true current date time.
      */
-    public static function removeCurrentDate()
+    public static function comeBack()
     {
         static::$currentTime       = null;
         static::$currentTimeOffset = null;
