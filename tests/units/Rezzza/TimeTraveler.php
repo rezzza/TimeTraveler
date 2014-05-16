@@ -146,4 +146,32 @@ class TimeTraveler extends atoum\test
             ->integer(strtotime($str, $strTime))
             ->isEqualTo($result);
     }
+
+
+    public function dateDataProvider()
+    {
+        return array(
+            // currentDate, format, method used, result expected
+            array('2011-06-10 11:00:00', 'Y-m-d H:i:s', 'date', '2011-06-10 11:00:00'),
+            array('2011-06-11 11:00:00', 'Y-m-d', 'date', '2011-06-11'),
+
+            array('2011-06-11 11:00:00', 'Y-m-d H:i:s', 'gmdate', '2011-06-11 09:00:00'),
+            array('2011-06-11 11:00:00', 'Y-m-d', 'gmdate', '2011-06-11'),
+        );
+    }
+
+    /**
+     * @dataProvider dateDataProvider
+     */
+    public function testDate($currentDate, $format, $function, $result)
+    {
+        ini_set('date.timezone', 'europe/paris');
+
+        $this->if(TestedClass::enable())
+            ->and(TestedClass::moveTo($currentDate))
+
+            ->string($function($format))
+            ->isEqualTo($result);
+    }
+
 }

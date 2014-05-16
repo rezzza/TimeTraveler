@@ -72,6 +72,21 @@ class TimeTraveler
             }
         });
 
+        $functionDates = function(\AopJoinPoint $joinPoint) {
+            if (TimeTraveler::getCurrentTimeOffset()) {
+                $args = $joinPoint->getArguments();
+                if (isset($args[1]) && !empty($args[1])) {
+                    return;
+                }
+
+                $function = $joinPoint->getFunctionName();
+                $joinPoint->setReturnedValue($function($args[0], time() + TimeTraveler::getCurrentTimeOffset()));
+            }
+        };
+
+        aop_add_after('date()', $functionDates);
+        aop_add_after('gmdate()', $functionDates);
+
         aop_add_after('date_create()', function(\AopJoinPoint $joinPoint) {
             if (TimeTraveler::getCurrentTime()) {
                 $args = $joinPoint->getArguments();
