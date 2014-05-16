@@ -33,7 +33,7 @@ Methods supported
 -----------------
 
 - `DateTime` object.
-
+- `create_date`
 - `time`
 - `microtime`
 - `strtotime`
