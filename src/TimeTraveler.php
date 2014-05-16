@@ -116,6 +116,25 @@ class TimeTraveler
             }
         });
 
+        aop_add_after('gettimeofday()', function(\AopJoinPoint $joinPoint) {
+            if (TimeTraveler::getCurrentTime()) {
+                $args = $joinPoint->getArguments();
+                if (array_key_exists(0, $args) && true === $args[0]) {
+                    $joinPoint->setReturnedValue($joinPoint->getReturnedValue() + TimeTraveler::getCurrentTimeOffset());
+                } else {
+                    $returnedValue = $joinPoint->getReturnedValue();
+
+                    $alteredReturnedValue = array();
+                    $alteredReturnedValue['sec'] = $returnedValue['sec'] + TimeTraveler::getCurrentTimeOffset();
+                    $alteredReturnedValue['usec'] = $returnedValue['usec'];
+                    $alteredReturnedValue['minuteswest'] = $returnedValue['minuteswest'];
+                    $alteredReturnedValue['dsttime'] = $returnedValue['dsttime'];
+
+                    $joinPoint->setReturnedValue($alteredReturnedValue);
+                }
+            }
+        });
+
         static::$enabled = true;
     }
 
