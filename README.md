@@ -34,9 +34,11 @@ Methods supported
 
 - `DateTime` object.
 
-- `time`
+- `date`
+- `gmdate`
 - `microtime`
 - `strtotime`
+- `time`
 
 Usage
 -----
