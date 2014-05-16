@@ -23,7 +23,7 @@ class TimeTraveler extends atoum\test
             ;
     }
 
-    public function testcomeBack()
+    public function testComeBack()
     {
         $this->if(TestedClass::moveTo('+1 second'))
             ->integer(TestedClass::getCurrentTimeOffset())
@@ -222,7 +222,7 @@ class TimeTraveler extends atoum\test
     }
 
 
-    public function gettmeofdayDReturnFloatDataProvider()
+    public function gettimeofdayDataProvider()
     {
         return array(
             array('2013-05-25 00:00:00', 1369432800),
@@ -231,16 +231,19 @@ class TimeTraveler extends atoum\test
     }
 
     /**
-     * @dataProvider gettmeofdayDReturnFloatDataProvider
+     * @dataProvider gettimeofdayDataProvider
      */
-    public function testGettimeofdayReturnFloat($currentDate, $roundSec)
+    public function testGettimeofday($currentDate, $roundSec)
     {
         $this->if(TestedClass::enable())
             ->and(TestedClass::moveTo($currentDate))
 
             ->float(gettimeofday(true))
-            ->isGreaterThanOrEqualTo((float) $roundSec)
-            ->isLessThan((float) ($roundSec + 1))
+            ->isNearlyEqualTo((float) $roundSec, pow(10, -9))
+
+            ->array(gettimeofday(false))
+            ->hasKey('sec')
+            ->containsValues(array($roundSec))
         ;
     }
 }
