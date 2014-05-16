@@ -57,7 +57,6 @@ class TimeTraveler
 
         aop_add_after('DateTime->__construct()', function(\AopJoinPoint $joinPoint) {
             if (TimeTraveler::getCurrentTime()) {
-
                 $args = $joinPoint->getArguments();
                 $date = isset($args[0]) ? $args[0] : null;
 
@@ -65,6 +64,19 @@ class TimeTraveler
 
                 if ($date) {
                     $joinPoint->getObject()->modify($date);
+                }
+            }
+        });
+
+        aop_add_after('date_create()', function(\AopJoinPoint $joinPoint) {
+            if (TimeTraveler::getCurrentTime()) {
+                $args = $joinPoint->getArguments();
+                $date = isset($args[0]) ? $args[0] : null;
+
+                $joinPoint->getReturnedValue()->setTimestamp(TimeTraveler::getCurrentTime());
+
+                if ($date) {
+                    $joinPoint->getReturnedValue()->modify($date);
                 }
             }
         });
@@ -85,7 +97,7 @@ class TimeTraveler
 
         $now = static::$currentTimeOffset ? time() - static::$currentTimeOffset : time();
 
-        static::$currentTime       = strtotime($date);
+        static::$currentTime = strtotime($date);
 
         if (static::$currentTime === false) {
             throw new \InvalidArgumentException(sprintf('Cannot parse "%s" as a date.', $date));

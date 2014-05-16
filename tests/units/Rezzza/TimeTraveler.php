@@ -53,6 +53,17 @@ class TimeTraveler extends atoum\test
             ->isEqualTo(new \DateTime($result));
     }
 
+    /**
+     * @dataProvider dateTimeConstructDataProvider
+     */
+    public function testDateCreate($currentDate, $date, $result)
+    {
+        $this->if(TestedClass::enable())
+            ->and(TestedClass::setCurrentDate($currentDate))
+            ->object(date_create($date))
+            ->isEqualTo(date_create($result));
+    }
+
     public function timeDataProvider()
     {
         return array(
