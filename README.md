@@ -56,5 +56,5 @@ Launch tests
 
 ```
 composer install --dev
-bin/atoum -d tests/units
+bin/atoum
 ```
