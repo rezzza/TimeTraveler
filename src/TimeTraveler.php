@@ -39,19 +39,23 @@ class TimeTraveler
         }
 
         aop_add_after('time()', function(\AopJoinPoint $joinPoint) {
-            $joinPoint->setReturnedValue($joinPoint->getReturnedValue() + TimeTraveler::getCurrentTimeOffset());
+            if (TimeTraveler::getCurrentTimeOffset()) {
+                $joinPoint->setReturnedValue($joinPoint->getReturnedValue() + TimeTraveler::getCurrentTimeOffset());
+            }
         });
 
         aop_add_after('microtime()', function(\AopJoinPoint $joinPoint) {
-            $returnedValue = $joinPoint->getReturnedValue();
+            if (TimeTraveler::getCurrentTimeOffset()) {
+                $returnedValue = $joinPoint->getReturnedValue();
 
-            if (is_float($returnedValue)) {
-                $joinPoint->setReturnedValue($joinPoint->getReturnedValue() + TimeTraveler::getCurrentTimeOffset());
-            } else {
-                list($micro, $seconds) = explode(' ', $joinPoint->getReturnedValue());
-                $seconds += TimeTraveler::getCurrentTimeOffset();
+                if (is_float($returnedValue)) {
+                    $joinPoint->setReturnedValue($joinPoint->getReturnedValue() + TimeTraveler::getCurrentTimeOffset());
+                } else {
+                    list($micro, $seconds) = explode(' ', $joinPoint->getReturnedValue());
+                    $seconds += TimeTraveler::getCurrentTimeOffset();
 
-                $joinPoint->setReturnedValue($micro.' '.$seconds);
+                    $joinPoint->setReturnedValue($micro.' '.$seconds);
+                }
             }
         });
 
@@ -105,10 +109,10 @@ class TimeTraveler
      *
      * @param string $date date
      */
-    public static function setCurrentDate($date)
+    public static function moveTo($date)
     {
         if (!is_scalar($date)) {
-            throw new \InvalidArgumentException('TimeTraveler::setCurrentDate expects a scalar.');
+            throw new \InvalidArgumentException('TimeTraveler::moveTo expects a scalar.');
         }
 
         $now = static::$currentTimeOffset ? time() - static::$currentTimeOffset : time();
@@ -120,6 +124,15 @@ class TimeTraveler
         }
 
         static::$currentTimeOffset = static::$currentTime - $now;
+    }
+
+    /**
+     * Remove current time and offset. Come back to true current date time.
+     */
+    public static function comeBack()
+    {
+        static::$currentTime       = null;
+        static::$currentTimeOffset = null;
     }
 
     /**
