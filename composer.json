@@ -1,0 +1,30 @@
+{
+    "name": "rezzza/time-traveler",
+    "description": "Travel the time in PHP",
+    "keywords": ["time", "mock", "standalone"],
+    "type": "standalone",
+    "homepage": "https://github.com/rezzza/TimeTraveler",
+    "license": "MIT",
+    "authors": [{
+        "name": "Community contributors",
+        "homepage": "https://github.com/rezzza/TimeTraveler/contributors"
+    }],
+    "require": {
+        "php": ">=5.3.2"
+    },
+    "require-dev": {
+        "atoum/atoum": "dev-master"
+    },
+    "suggest": {
+        "ext-aop" : "To enable the time traveler and use this library."
+    },
+    "autoload":     {
+        "psr-0": {
+            "Rezzza\\TimeTraveler": "src/"
+        }
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "minimum-stability": "dev"
+}
