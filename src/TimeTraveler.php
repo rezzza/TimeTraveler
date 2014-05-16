@@ -81,6 +81,22 @@ class TimeTraveler
             }
         });
 
+        aop_add_after('strtotime()', function(\AopJoinPoint $joinPoint) {
+            $arguments = $joinPoint->getArguments();
+            if (isset($arguments[1]) && !empty($arguments[1])) {
+                // time is given, we haven't anything to do.
+                return;
+            }
+
+            if (TimeTraveler::getCurrentTime()) {
+                $date = new \DateTime();
+                $date->setTimestamp(TimeTraveler::getCurrentTime());
+                $date->modify($arguments[0]);
+
+                $joinPoint->setReturnedValue($date->getTimestamp());
+            }
+        });
+
         static::$enabled = true;
     }
 
