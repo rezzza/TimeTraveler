@@ -39,6 +39,18 @@ class TimeTraveler
             throw new \LogicException('Aop extension seems to not be installed.');
         }
 
+        $createDateTimeWithStr = function(\DateTime $date, $str = null) {
+            if (TimeTraveler::getCurrentTime()) {
+                $date->setTimestamp(TimeTraveler::getCurrentTime());
+
+                if ($str) {
+                    $date->modify($str);
+                }
+            }
+
+            return $date;
+        };
+
         aop_add_after('time()', function(\AopJoinPoint $joinPoint) {
             if (TimeTraveler::getCurrentTimeOffset()) {
                 $joinPoint->setReturnedValue($joinPoint->getReturnedValue() + TimeTraveler::getCurrentTimeOffset());
@@ -60,10 +72,8 @@ class TimeTraveler
             }
         });
 
-        aop_add_after('DateTime->__construct()', function(\AopJoinPoint $joinPoint) {
-            if (TimeTraveler::getCurrentTime()) {
-                TimeTraveler::createDateTimeWithStr($joinPoint->getObject(), isset($args[0]) ? $args[0] : null);
-            }
+        aop_add_after('DateTime->__construct()', function(\AopJoinPoint $joinPoint) use ($createDateTimeWithStr) {
+            $createDateTimeWithStr($joinPoint->getObject(), isset($args[0]) ? $args[0] : null);
         });
 
         $functionDates = function(\AopJoinPoint $joinPoint) {
@@ -81,13 +91,11 @@ class TimeTraveler
         aop_add_after('date()', $functionDates);
         aop_add_after('gmdate()', $functionDates);
 
-        aop_add_after('date_create()', function(\AopJoinPoint $joinPoint) {
-            if (TimeTraveler::getCurrentTime()) {
-                TimeTraveler::createDateTimeWithStr($joinPoint->getReturnedValue(), isset($args[0]) ? $args[0] : null);
-            }
+        aop_add_after('date_create()', function(\AopJoinPoint $joinPoint) use ($createDateTimeWithStr) {
+            $createDateTimeWithStr($joinPoint->getReturnedValue(), isset($args[0]) ? $args[0] : null);
         });
 
-        aop_add_after('strtotime()', function(\AopJoinPoint $joinPoint) {
+        aop_add_after('strtotime()', function(\AopJoinPoint $joinPoint) use ($createDateTimeWithStr) {
             $arguments = $joinPoint->getArguments();
             if (isset($arguments[1]) && !empty($arguments[1])) {
                 // time is given, we haven't anything to do.
@@ -95,7 +103,7 @@ class TimeTraveler
             }
 
             if (TimeTraveler::getCurrentTime()) {
-                $date = TimeTraveler::createDateTimeWithStr(new \DateTime(), $arguments[0]);
+                $date = $createDateTimeWithStr(new \DateTime(), $arguments[0]);
 
                 $joinPoint->setReturnedValue($date->getTimestamp());
             }
@@ -163,24 +171,5 @@ class TimeTraveler
     public static function getCurrentTime()
     {
         return self::$currentTime;
-    }
-
-    /**
-     * @param \DateTime $date date
-     * @param string    $str  str
-     *
-     * @return \DateTime
-     */
-    public static function createDateTimeWithStr(\DateTime $date, $str = null)
-    {
-        if (TimeTraveler::getCurrentTime()) {
-            $date->setTimestamp(TimeTraveler::getCurrentTime());
-
-            if ($str) {
-                $date->modify($str);
-            }
-        }
-
-        return $date;
     }
 }
