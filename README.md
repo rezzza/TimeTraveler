@@ -1,7 +1,7 @@
 TimeTraveler
 ===========
 
-[![Build Status](https://secure.travis-ci.org/rezzza/TimeTraveler.png)](http://travis-ci.org/rezzza/TimeTraveler) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/rezzza/TimeTraveler/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rezzza/TimeTraveler/?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/rezzza/time-traveler/v/stable.png)](https://packagist.org/packages/rezzza/time-traveler) [![Build Status](https://secure.travis-ci.org/rezzza/TimeTraveler.png)](http://travis-ci.org/rezzza/TimeTraveler) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/rezzza/TimeTraveler/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/rezzza/TimeTraveler/?branch=master)
 
 `````
           _
