@@ -27,10 +27,11 @@ class TimeTraveler
     private static $enabled = false;
 
     /**
+     * Enable the time traveler.
      */
     public static function enable()
     {
-        if (static::$enabled === true) {
+        if (self::$enabled === true) {
             return;
         }
 
@@ -61,14 +62,7 @@ class TimeTraveler
 
         aop_add_after('DateTime->__construct()', function(\AopJoinPoint $joinPoint) {
             if (TimeTraveler::getCurrentTime()) {
-                $args = $joinPoint->getArguments();
-                $date = isset($args[0]) ? $args[0] : null;
-
-                $joinPoint->getObject()->setTimestamp(TimeTraveler::getCurrentTime());
-
-                if ($date) {
-                    $joinPoint->getObject()->modify($date);
-                }
+                self::modifyDateTimeWithStr($joinPoint->getObject(), isset($args[0]) ? $args[0] : null);
             }
         });
 
@@ -89,14 +83,7 @@ class TimeTraveler
 
         aop_add_after('date_create()', function(\AopJoinPoint $joinPoint) {
             if (TimeTraveler::getCurrentTime()) {
-                $args = $joinPoint->getArguments();
-                $date = isset($args[0]) ? $args[0] : null;
-
-                $joinPoint->getReturnedValue()->setTimestamp(TimeTraveler::getCurrentTime());
-
-                if ($date) {
-                    $joinPoint->getReturnedValue()->modify($date);
-                }
+                self::modifyDateTimeWithStr($joinPoint->getReturnedValue(), isset($args[0]) ? $args[0] : null);
             }
         });
 
@@ -108,9 +95,7 @@ class TimeTraveler
             }
 
             if (TimeTraveler::getCurrentTime()) {
-                $date = new \DateTime();
-                $date->setTimestamp(TimeTraveler::getCurrentTime());
-                $date->modify($arguments[0]);
+                $date = self::modifyDateTimeWithStr(new \DateTime(), $arguments[0]);
 
                 $joinPoint->setReturnedValue($date->getTimestamp());
             }
@@ -130,7 +115,7 @@ class TimeTraveler
             }
         });
 
-        static::$enabled = true;
+        self::$enabled = true;
     }
 
     /**
@@ -144,15 +129,15 @@ class TimeTraveler
             throw new \InvalidArgumentException('TimeTraveler::moveTo expects a scalar.');
         }
 
-        $now = static::$currentTimeOffset ? time() - static::$currentTimeOffset : time();
+        $now = self::$currentTimeOffset ? time() - self::$currentTimeOffset : time();
 
-        static::$currentTime = strtotime($date);
+        self::$currentTime = strtotime($date);
 
-        if (static::$currentTime === false) {
+        if (self::$currentTime === false) {
             throw new \InvalidArgumentException(sprintf('Cannot parse "%s" as a date.', $date));
         }
 
-        static::$currentTimeOffset = static::$currentTime - $now;
+        self::$currentTimeOffset = self::$currentTime - $now;
     }
 
     /**
@@ -160,8 +145,8 @@ class TimeTraveler
      */
     public static function comeBack()
     {
-        static::$currentTime       = null;
-        static::$currentTimeOffset = null;
+        self::$currentTime       = null;
+        self::$currentTimeOffset = null;
     }
 
     /**
@@ -169,7 +154,7 @@ class TimeTraveler
      */
     public static function getCurrentTimeOffset()
     {
-        return static::$currentTimeOffset;
+        return self::$currentTimeOffset;
     }
 
     /**
@@ -177,6 +162,25 @@ class TimeTraveler
      */
     public static function getCurrentTime()
     {
-        return static::$currentTime;
+        return self::$currentTime;
+    }
+
+    /**
+     * @param \DateTime $date date
+     * @param string    $str  str
+     *
+     * @return \DateTime
+     */
+    private static function modifyDateTimeWithStr(\DateTime $date, $str = null)
+    {
+        if (TimeTraveler::getCurrentTime()) {
+            $date->setTimestamp(TimeTraveler::getCurrentTime());
+
+            if ($str) {
+                $date->modify($str);
+            }
+        }
+
+        return $date;
     }
 }
