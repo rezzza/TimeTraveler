@@ -62,7 +62,7 @@ class TimeTraveler
 
         aop_add_after('DateTime->__construct()', function(\AopJoinPoint $joinPoint) {
             if (TimeTraveler::getCurrentTime()) {
-                self::modifyDateTimeWithStr($joinPoint->getObject(), isset($args[0]) ? $args[0] : null);
+                TimeTraveler::createDateTimeWithStr($joinPoint->getObject(), isset($args[0]) ? $args[0] : null);
             }
         });
 
@@ -83,7 +83,7 @@ class TimeTraveler
 
         aop_add_after('date_create()', function(\AopJoinPoint $joinPoint) {
             if (TimeTraveler::getCurrentTime()) {
-                self::modifyDateTimeWithStr($joinPoint->getReturnedValue(), isset($args[0]) ? $args[0] : null);
+                TimeTraveler::createDateTimeWithStr($joinPoint->getReturnedValue(), isset($args[0]) ? $args[0] : null);
             }
         });
 
@@ -95,7 +95,7 @@ class TimeTraveler
             }
 
             if (TimeTraveler::getCurrentTime()) {
-                $date = self::modifyDateTimeWithStr(new \DateTime(), $arguments[0]);
+                $date = TimeTraveler::createDateTimeWithStr(new \DateTime(), $arguments[0]);
 
                 $joinPoint->setReturnedValue($date->getTimestamp());
             }
@@ -171,7 +171,7 @@ class TimeTraveler
      *
      * @return \DateTime
      */
-    private static function modifyDateTimeWithStr(\DateTime $date, $str = null)
+    public static function createDateTimeWithStr(\DateTime $date, $str = null)
     {
         if (TimeTraveler::getCurrentTime()) {
             $date->setTimestamp(TimeTraveler::getCurrentTime());
