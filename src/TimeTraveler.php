@@ -73,6 +73,7 @@ class TimeTraveler
         });
 
         aop_add_after('DateTime->__construct()', function(\AopJoinPoint $joinPoint) use ($createDateTimeWithStr) {
+            $args = $joinPoint->getArguments();
             $createDateTimeWithStr($joinPoint->getObject(), isset($args[0]) ? $args[0] : null);
         });
 
