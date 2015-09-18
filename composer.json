@@ -16,7 +16,8 @@
         "atoum/atoum": "dev-master"
     },
     "suggest": {
-        "ext-aop" : "To enable the time traveler and use this library."
+        "ext-aop" : "To enable the time traveler and use this library.",
+        "goaop/framework" : "To enable the time traveler and use this library."
     },
     "autoload":     {
         "psr-4": { "Rezzza\\": "src/" }
