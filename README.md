@@ -28,6 +28,11 @@ TimeTraveler
 
 Mock the time system in PHP using [AOP-PHP](https://github.com/AOP-PHP/AOP). You can now travel the time on your application easily !
 
+Install
+-----------------
+```
+composer require --dev "rezzza/time-traveler"
+```
 
 Methods supported
 -----------------
